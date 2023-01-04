@@ -3,7 +3,7 @@
 
 ## :notebook: 진행방법
 - "알고리즘 문제해결 전략"으로 알고리즘 공부
-- 매일 유형별 3문제씩 풀이하기 : [문제집](https://github.com/tony9402/baekjoon) &nbsp; [삼성 기출문제](https://www.codetree.ai/training-field/frequent-problems/?page=1&pageSize=20&username=) &nbsp; [SW Expert Academy](https://swexpertacademy.com/)
+- 매일 유형별 3문제씩 풀이하기 : [문제집](https://github.com/tony9402/baekjoon) &nbsp; [삼성 기출문제](https://www.codetree.ai/training-field/frequent-problems/?page=1&pageSize=20&username=) &nbsp; [SW Expert Academy](https://swexpertacademy.com/) &nbsp; [알고스팟](https://algospot.com/)
 - 풀이 내용 블로그에 정리 : Today I Learned
 - 일주일에 한 번 모의고사 진행 : [모의고사 문제집](https://github.com/tony9402/baekjoon/blob/main/picked.md)
 
