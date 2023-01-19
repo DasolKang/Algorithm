@@ -1,0 +1,21 @@
+import sys
+
+input=sys.stdin.readline
+
+T=int(input())
+
+def solution(x: int, y: int):
+    if dp[x][y]: return dp[x][y]
+    else:
+        dp[x][y]=solution(x-1, y-1)+solution(x, y-1)
+        return dp[x][y]
+
+for _ in range(T):
+    N, M=map(int, input().split())
+    dp=[[0]*(M+1) for _ in range(N+1)]
+    for i in range(M+1):
+        if (i<=N): dp[i][i]=1
+        dp[1][i]=i
+    print(solution(N, M))
+
+
