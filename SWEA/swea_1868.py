@@ -16,7 +16,7 @@ def getNumberBoard(x: int, y: int):
                 else:
                     board[nx][ny]+=1
 
-def open(x: int, y: int):
+def openNumber(x: int, y: int):
     global R, C
     for i in range(8):
         nx=x+dx[i]
@@ -24,7 +24,7 @@ def open(x: int, y: int):
         if (0<=nx<R and 0<=ny<C and not visited[nx][ny]): 
             visited[nx][ny]=True
             if (board[nx][ny]==0):
-                open(nx, ny)
+                openNumber(nx, ny)
 
 def countClick():
     global R, C
@@ -34,7 +34,7 @@ def countClick():
             if board[i][j]==0 and not visited[i][j]:
                 visited[i][j]=True
                 count+=1
-                open(i, j)
+                openNumber(i, j)
     print(*board, sep="\n")
     for temp in visited:
         count+=temp.count(False)
