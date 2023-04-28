@@ -19,7 +19,10 @@ for test_case in range(1, T+1):
         x, y=queue.popleft()
         for i in range(4):
             nx, ny=x+dxs[i], y+dys[i]
-            if (in_range(N, nx, ny) and (visited[nx][ny]==-1 or visited[nx][ny]>visited[x][y]+board[nx][ny])):
-                visited[nx][ny]=visited[x][y]+board[nx][ny]
-                queue.append([nx, ny])
+            if (nx==0 and ny==0): continue
+            if (in_range(N, nx, ny)):
+                if visited[nx][ny]==-1 or visited[nx][ny]>visited[x][y]+board[nx][ny]:
+                    visited[nx][ny]=visited[x][y]+board[nx][ny]
+                    queue.append([nx, ny])
+                    
     print("#{} {}".format(test_case, visited[N-1][N-1]))
