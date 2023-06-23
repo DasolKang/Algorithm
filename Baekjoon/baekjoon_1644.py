@@ -4,7 +4,7 @@ input=sys.stdin.readline
 
 def get_prime(num):
     is_prime=[1]*(num+1)
-    for i in range(2, int(num**0.5)):
+    for i in range(2, int(num**0.5)+1):
         if (is_prime[i]==1):
             for j in range(i+i, num+1, i):
                 is_prime[j]=0
@@ -13,6 +13,7 @@ def get_prime(num):
         if (is_prime[i]==1):
             prime.append(i)
     return prime
+
 
 N=int(input())
 prime=get_prime(N)
