@@ -1,73 +1,53 @@
-import java.util.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
 public class Main {
-	
-	static int[] dxs = {-1, 0, 1, 1, 1, 0, -1, -1};
-	static int[] dys = {1, 1, 1, 0, -1, -1, -1, 0};
-	final static int SIZE = 19;
-	static int winner = 0;
-	static int winX=0, winY=0;
-	static boolean[][] visited=new boolean[SIZE][SIZE];
-	
-	public static void main(String[] args) throws IOException {
-		int[][] board = input_();
-		for (int i=0;i<SIZE;i++) {
-			for (int j=0;j<SIZE;j++) {
-				if (board[i][j]==1) {
-					for (int d=0;d<4;d++) {
-						isWinner(board, i, j, i, j, 1, 1, d);
-					}
-				} else if (board[i][j]==2) {
-					for (int d=0;d<4;d++) {
-						isWinner(board, i, j, i, j, 2, 1, d);
-					}
-				} 
-			}
-		}
-		System.out.println(winner);
-		if (winner!=0)	System.out.println((winX+1) + " " + (winY+1));
-	}
-	
-	static void isWinner(int[][] board, int x, int y, int startX, int startY, int player, int depth, int dirIndex) {
-		// 현재까지의 depth==5 and 다음 칸의 바둑알을 색이 달라지면 winner
-		visited[x][y]=true;
-		int nx = x+dxs[dirIndex];
-		int ny = y+dys[dirIndex];
-		if (inRange(nx, ny) && board[nx][ny]==player) {
-				isWinner(board, nx, ny, startX, startY, player, depth+1, dirIndex);
-		} else if (depth==5){
-			if (checkRealWinner(board, startX, startY, dirIndex, player)) {
-				winner = player;
-				winX=startX;
-				winY=startY;
-				return ;
-			} 
-		} 
-	}
-	
-	static boolean checkRealWinner(int[][] board, int x, int y, int dirIndex, int player) {
-		int dir = (dirIndex+4)%8;
-		int nx = x+dxs[dir];
-		int ny = y+dys[dir];
-		if (inRange(nx, ny) && board[nx][ny]==player) return false;
-		return true;
-	}
-	
-	static boolean inRange(int x, int y) {
-		return 0<=x && x<SIZE && 0<=y && y<SIZE;
-	}
-	
-	static int[][] input_() throws IOException {
+
+	public static void main(String[] args) throws Exception {
+		int n = 19;
+		int[][] dxy = {{1, 1}, {0, 1}, {1, 0}, {-1, 1}};
+		int[][] board = new int[n][n];
+		
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer tokenizer;
-		int[][] inputBoard = new int[SIZE][SIZE];
-		for (int i=0;i<SIZE;i++) {
-			tokenizer = new StringTokenizer(br.readLine());
-			for (int j=0;j<SIZE;j++) {
-				inputBoard[i][j]=Integer.parseInt(tokenizer.nextToken());
+		for (int i = 0; i < n; i++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			for (int j = 0; j < n; j++) {
+				board[i][j] = Integer.parseInt(st.nextToken());
 			}
 		}
-		return inputBoard;
+				
+		
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (board[i][j] == 1 || board[i][j] == 2) {
+					int[][] visited = new int[n][n];
+					int num = board[i][j];
+					visited[i][j] = 0;
+					for (int k = 0; k < 4; k++) {
+						int cnt = 1;
+						int ci = i, cj = j;
+						while (cnt <= 6) {
+							int ni = ci + dxy[k][0], nj = cj + dxy[k][1];
+							if (ni < 0 || ni >= n || nj < 0 || nj >= n) break;
+							if (board[ni][nj] != num) break;
+							if (visited[ni][nj] == 1) break;
+							cnt ++;
+							visited[ni][nj] = 1;
+							ci = ni;
+							cj = nj;
+						}
+						if (cnt == 5) {
+							int ni = i + (-1) * dxy[k][0], nj = j + (-1) * dxy[k][1];
+							if (!(ni < 0 || ni >= n || nj < 0 || nj >= n) && board[ni][nj] == num) continue;
+							System.out.println(num);
+							System.out.println((i+1) + " " + (j+1));
+							return;
+						}
+					}
+				}
+			}
+		}	
+		System.out.println("0");
 	}
 }
