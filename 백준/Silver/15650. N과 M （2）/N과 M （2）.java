@@ -1,36 +1,39 @@
-import java.io.IOException;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 public class Main {
-	static int N, M, answer[];
-	static StringBuilder sb = new StringBuilder();
+	
+	private static int n, m;
+	private static int[] seq;
+	private static boolean[] isSelected;
 
-	public static void main(String[] args) throws IOException {
-		Scanner scanner = new Scanner(System.in);
-		N = scanner.nextInt();
-		M = scanner.nextInt();
-		answer = new int[M];
-		permutation(0, new boolean[N + 1]);
-		System.out.print(sb.toString());
+	public static void main(String[] args) throws Exception{
+		
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String input = br.readLine();
+		n = Integer.parseInt(input.split(" ")[0]);
+		m = Integer.parseInt(input.split(" ")[1]);
+		seq = new int[m];
+		isSelected = new boolean[n+1];
+		getSeq(0, 1);
 	}
-
-	public static void permutation(int index, boolean[] visited) {
-		if (index == M) {
-			for (int i = 0; i < M; i++) {
-				sb.append(answer[i] + " ");
+	
+	private static void getSeq(int idx, int start) {
+		if (idx == m) {
+			for (int i = 0; i < m; i++) {
+				System.out.print(seq[i] + " ");
 			}
-			sb.append("\n");
+			System.out.println();
 			return;
 		}
-		for (int i = 1; i <= N; i++) {
-			if (!visited[i]) {
-				if (index == 0 || (index!=0 && answer[index-1]<i)) {
-					answer[index] = i;
-					visited[i] = true;
-					permutation(index + 1, visited);
-					visited[i] = false;
-				}
-			}
+		
+		for (int i = start; i <= n; i++) {
+			if (isSelected[i]) continue;
+			isSelected[i] = true;
+			seq[idx] = i;
+			getSeq(idx+1, i+1);
+			isSelected[i] = false;
 		}
 	}
+
 }
