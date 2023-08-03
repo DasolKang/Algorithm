@@ -1,65 +1,61 @@
-import java.util.*;
-import java.io.*;
-
-/*
- * 1. summary: 문제 해석
- * 	  입력받은 문자열의 부분문자열을 비밀번호로 사용하기위해
- * 	  A, C, G, T의 문자가 일정 개수 이상 등장해야한다.
- * 	  사용 가능한 비밀번호의 수를 구하라.
- * 2. strategy: 풀이전략
- *	  문자열의 가능한 부분 문자열을 모두 구한 후 조건을 만족하는지 확인
- * 3. note: 주의할 사항(특이사항)
- */
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
 
-	static int S, P, answer;
-	static char[] password;
-	static final Map<Character, Integer> charIndexInfo = new HashMap<Character, Integer>() {
-		{
-			put('A', 0);
-			put('C', 1);
-			put('G', 2);
-			put('T', 3);
-		}
-	};
-	static int[] required = new int[4];
-	static int[] checkArr = new int[4];
+	public static void main(String[] args) throws Exception{
 
-	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer tokenizer = new StringTokenizer(br.readLine());
-		S = Integer.parseInt(tokenizer.nextToken());
-		P = Integer.parseInt(tokenizer.nextToken());
-
-		password = br.readLine().toCharArray();
-
-		tokenizer = new StringTokenizer(br.readLine());
+		String input = br.readLine();
+		int dnaStrLen = Integer.parseInt(input.split(" ")[0]);
+		int pwLen = Integer.parseInt(input.split(" ")[1]);
+		
+		String dnaStr = br.readLine();
+		
+		Map<Character, Integer> selectedCnt = new HashMap<>();
+		String[] minCntInput = br.readLine().split(" ");
+		Map<Character, Integer> minCnt = new HashMap<>();
+		
+		char[] dna = {'A', 'C', 'G', 'T'};
 		for (int i = 0; i < 4; i++) {
-			required[i] = Integer.parseInt(tokenizer.nextToken());
+			minCnt.put(dna[i], Integer.parseInt(minCntInput[i]));
+			selectedCnt.put(dna[i], 0);
 		}
-		getPassword();
-		System.out.println(answer);
+		
+		int subStrCnt = 0;
+		int i = 0;
+		
+		while (i < dnaStrLen) {
+			if (i == 0) {
+				for (int j = 0; j < pwLen; j++) {
+					char curChar = dnaStr.charAt(j);
+					selectedCnt.put(curChar, selectedCnt.get(curChar)+1);
+				}
+				i = pwLen;
+			} else {
+				char frontChar = dnaStr.charAt(i-pwLen);
+				char rearChar = dnaStr.charAt(i);
+				selectedCnt.put(frontChar, selectedCnt.get(frontChar)-1);
+				selectedCnt.put(rearChar, selectedCnt.get(rearChar)+1);
+				i++;
+			}
+			
+			boolean validPW = true;
+			for (int j = 0; j < 4; j++) {
+				if (selectedCnt.get(dna[j]) < minCnt.get(dna[j])) {
+					validPW = false;
+					break;
+				}
+			}
+			if (validPW) {
+				subStrCnt++;
+			}
+		}
+		
+		System.out.println(subStrCnt);
+		
 	}
 
-	private static void getPassword() {
-		int startIndex = 0, endIndex = P-1;
-		for (int i = startIndex; i <= endIndex; i++) {
-			checkArr[charIndexInfo.get(password[i])]++;
-		}
-		while (true) {
-			if (checkPassword()) answer++;
-			checkArr[charIndexInfo.get(password[startIndex++])]--;
-			if (endIndex+1==S) break;
-			checkArr[charIndexInfo.get(password[++endIndex])]++;
-		}
-	}
-
-	private static boolean checkPassword() {
-		for (int i = 0; i < 4; i++) {
-			if (required[i] > checkArr[i])
-				return false;
-		}
-		return true;
-	}
 }
