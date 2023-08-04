@@ -15,6 +15,7 @@ import java.io.*;
 public class Solution {
 
 	public static void main(String[] args) throws IOException {
+
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
 		for (int test_case = 1; test_case <= 10; test_case++) {
@@ -31,6 +32,7 @@ public class Solution {
 			sb.append("\n");
 		}
 		System.out.println(sb.toString());
+
 	}
 
 	static Queue<Integer> getPassword(Queue<Integer> queue) {
@@ -44,6 +46,7 @@ public class Solution {
 			queue.add(temp);
 			reduce = (reduce + 1 < 6) ? reduce + 1 : 1;
 		}
+
 		return queue;
 	}
 
