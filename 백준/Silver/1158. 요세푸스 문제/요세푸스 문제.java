@@ -1,32 +1,37 @@
-import java.util.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 public class Main {
 
-	public static void main(String[] args) throws IOException{
+	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer tokenizer = new StringTokenizer(br.readLine());
-		int N = Integer.parseInt(tokenizer.nextToken());
-		int K = Integer.parseInt(tokenizer.nextToken());
+		String[] input = br.readLine().split(" ");
+		int n = Integer.parseInt(input[0]);
+		int k = Integer.parseInt(input[1]);
 		
-		Deque<Integer> queue = new LinkedList<>();
-		for (int i=1; i<=N;i++) {
-			queue.add(i);
-		}
+		StringBuilder sb = new StringBuilder();
+		sb.append("<");
 		
-		List<Integer> result = new ArrayList<>();
-		while (!queue.isEmpty()) {
-			for (int i=0;i<K-1;i++) {
-				queue.add(queue.pollFirst());
+		int count = 0;
+		int num = 0;
+		boolean[] removed = new boolean[n+1];
+		removed[0] = true;
+		while (count < n) {
+			int move = 0;
+			while (move < k) {
+				num = num + 1 > n ?  1 : num + 1;
+				if (!removed[num]) move ++;
 			}
-			result.add(queue.pollFirst());
+			removed[num] = true;
+			
+			sb.append(num);
+			if (count + 1 < n) {
+				sb.append(", ");
+			}
+			count ++;
 		}
-		System.out.print("<");
-		for (int i=0;i<N;i++) {
-			System.out.print(result.get(i));
-			if (i<N-1) System.out.print(", ");
-		}
-		System.out.print(">");
-		
+		sb.append(">");
+		System.out.println(sb);
 	}
+
 }
