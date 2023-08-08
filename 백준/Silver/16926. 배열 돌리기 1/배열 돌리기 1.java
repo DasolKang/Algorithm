@@ -1,61 +1,84 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.Arrays;
+import java.util.*;
+import java.io.*;
+
+/*
+ * 1. summary: 문제 해석
+ * N*M 배열을 반시계 방향으로 R번 돌리고자 한다.
+ * 2. strategy: 풀이전략
+ * 반시계 방향으로 회전하는 메서드 만들어서 R번 반복
+ * 3. note: 주의할 사항(특이사항)
+ */
 
 public class Main {
 
-	public static void main(String[] args) throws Exception {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		String[] input = br.readLine().split(" ");
-		int n = Integer.parseInt(input[0]);
-		int m = Integer.parseInt(input[1]);
-		int r = Integer.parseInt(input[2]);
-		
-		int[][] dxy = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
-		
-		int[][] arr = new int[n][];
-		for (int i = 0; i < n; i++) {
-			arr[i] = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-		}
-		
-		
-		for (int i = 0; i < r; i++) {
-			int[][] rotatedArr = new int[n][m];
-			int sx = 0, sy = 0;
-			int cx = 0, cy = 0;
-			int dir = 0;
-			while (rotatedArr[sx][sy] == 0) {
-				int nx = cx + dxy[dir][0], ny = cy + dxy[dir][1];
+	private static int N, M, board[][];
+	private static final int[] dxs = { 0, 1, 0, -1 };
+	private static final int[] dys = { 1, 0, -1, 0 };
 
-				if (nx < 0 || nx >= n || ny < 0 || ny >= m || rotatedArr[nx][ny] > 0) {
-					dir = dir + 1 == 4 ? 1: dir + 1;
-					nx = cx + dxy[dir][0];
-					ny = cy + dxy[dir][1];
-				}
-				rotatedArr[nx][ny] = arr[cx][cy];
-				
-				cx = nx;
-				cy = ny;
-				if (cx == sx && cy == sy) {
-					cx ++;
-					cy ++;
-					sx ++;
-					sy ++;
-					dir = 0;
-				}
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer tokenizer = new StringTokenizer(br.readLine());
+		N = Integer.parseInt(tokenizer.nextToken());
+		M = Integer.parseInt(tokenizer.nextToken());
+		int R = Integer.parseInt(tokenizer.nextToken());
+		board = new int[N][M];
+		for (int i = 0; i < N; i++) {
+			tokenizer = new StringTokenizer(br.readLine());
+			for (int j = 0; j < M; j++) {
+				board[i][j] = Integer.parseInt(tokenizer.nextToken());
 			}
-			
-			arr = rotatedArr;
 		}
-		
+
+		for (int i = 0; i < R; i++)
+			rotation();
+
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < m; j++) {
-				sb.append(arr[i][j] + " ");
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < M; j++) {
+				sb.append(board[i][j]).append(" ");
 			}
 			sb.append("\n");
 		}
-		System.out.println(sb);
+		System.out.println(sb.toString());
+	}
+
+	private static void rotation() {
+		int[][] result = new int[N][M];
+		int minSize = Math.min((int) N / 2, (int) M / 2);
+		for (int i = 0; i < minSize; i++) {
+			int x = i, y = i;
+			int dir = 0;
+			int temp = board[x][y];
+			while (true) {
+				if (result[x][y] != 0)
+					break;
+				int nx = x + dxs[dir], ny = y + dys[dir];
+				if (!inRange(nx, ny)) {
+					// 범위 바깥이라면 방향 변환
+					dir++;
+					continue;
+				}
+				if (dir == 3 && result[nx][ny] != 0) {
+					// 한바퀴 다 돌았다면 stop
+					result[x][y] = temp;
+					break;
+				}
+				if (result[nx][ny] != 0) {
+					// 바깥 원을 만났다면 방향 전환
+					dir = dir + 1;
+					continue;
+				}
+				result[x][y] = board[nx][ny];
+				x = nx;
+				y = ny;
+			}
+		}
+
+		board = result;
+	}
+
+	private static boolean inRange(int x, int y) {
+		return 0 <= x && x < N && 0 <= y && y < M;
 	}
 
 }
