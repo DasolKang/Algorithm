@@ -13,33 +13,33 @@ import java.io.*;
 
 public class Main {
 
-	private static int N, M, dp[][]; //dp[n][r] : nCr 값 저장
+	private static int N, M, dp[][]; // dp[n][r] : nCr 값 저장
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		dp = new int[31][31];
+		for (int i = 0; i <= 30; i++) {
+			dp[i][i] = 1; // nCn : 1
+			dp[i][1] = i; // nC1 : n
+		}
 		int T = Integer.parseInt(br.readLine());
 		for (int t = 0; t < T; t++) {
 			input(br);
-			combination();
-			System.out.println(dp[N][M]);
+			System.out.println(combination(N, M));
 		}
 	}
 
-	private static void combination() {
-		for (int i = 0; i <= N; i++) {
-			for (int j = 0, end = Math.min(i, M); j <= end; j++) {
-				if (j == 0 || i == j) dp[i][j] = 1; 
-				else // nCr = n-1Cr-1 + n-1Cr
-					dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j];
-			}
-		}
+	private static int combination(int n, int r) {
+		if (dp[n][r] != 0)
+			return dp[n][r];
+		dp[n][r] = combination(n - 1, r - 1) + combination(n - 1, r);
+		return dp[n][r];
 	}
 
 	private static void input(BufferedReader br) throws IOException {
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		M = Integer.parseInt(st.nextToken());
 		N = Integer.parseInt(st.nextToken());
-		dp = new int[N + 1][N + 1];
 	}
 
 }
