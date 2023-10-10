@@ -10,6 +10,9 @@ import java.io.*;
  *  - 3번이 S극일 때 4점
  *  - 4번이 S극일 때 8점
  * 2. strategy: 풀이전략
+ *  입력으로 들어온 자석의 인덱스와 방향에 맞춰 회전
+ *  -> 왼쪽 자석과 맞닿은 극이 다를 때 왼쪽 자석을 방향의 반대로 회전
+ *  -> 오른쪽 자석과 맞닿은 극이 다를 때 오른쪽 자석을 방향의 반대로 회전
  * 3. note: 주의할 사항(특이사항)
  */
 
@@ -31,54 +34,37 @@ public class Solution {
 				int index = Integer.parseInt(st.nextToken());
 				int dir = Integer.parseInt(st.nextToken());
 				visited[index] = true;
-				if (dir == 1) {
-					turnRight(index);
-				} else {
-					turnLeft(index);
-				}
+				turn(index, dir);
 			}
 			sb.append("#").append(test_case).append(" ");
 			sb.append(getScore()).append("\n");
-
 		}
 		System.out.println(sb.toString());
 	}
 
-	private static void turnLeft(int index) {
+	private static void turn(int index, int turnDir) {
 		// 현재 톱니 바퀴의 왼쪽 바퀴 돌리기
-		if (index - 1 > 0 && !visited[index - 1] && info[index].get(6) != info[index - 1].get(2)) {
+		if (index - 1 > 0 && !visited[index - 1] && 
+				info[index].get(6) != info[index - 1].get(2)) {
 			visited[index] = true;
-			turnRight(index - 1);
+			turn(index - 1, -(turnDir));
 		}
 
 		// 현재 톱니 바퀴의 오른쪽 바퀴 돌리기
-		if (index + 1 <= 4 && !visited[index + 1] && info[index].get(2) != info[index + 1].get(6)) {
+		if (index + 1 <= 4 && !visited[index + 1] && 
+				info[index].get(2) != info[index + 1].get(6)) {
 			visited[index] = true;
-			turnRight(index + 1);
+			turn(index + 1, -(turnDir));
 		}
 
 		ArrayList<Integer> temp = info[index];
-		int last = temp.remove(0);
-		temp.add(last);
-
-	}
-
-	private static void turnRight(int index) {
-		// 현재 톱니 바퀴의 왼쪽 바퀴 돌리기
-		if (index - 1 > 0 && !visited[index - 1] && info[index].get(6) != info[index - 1].get(2)) {
-			visited[index] = true;
-			turnLeft(index - 1);
+		if (turnDir == -1) {
+			int last = temp.remove(0);
+			temp.add(last);
+		} else {
+			int first = temp.remove(temp.size() - 1);
+			temp.add(0, first);
 		}
-
-		// 현재 톱니 바퀴의 오른쪽 바퀴 돌리기
-		if (index + 1 <= 4 && !visited[index + 1] && info[index].get(2) != info[index + 1].get(6)) {
-			visited[index] = true;
-			turnLeft(index + 1);
-		}
-
-		ArrayList<Integer> temp = info[index];
-		int first = temp.remove(temp.size() - 1);
-		temp.add(0, first);
 	}
 
 	private static int getScore() {
